@@ -27,6 +27,20 @@ public partial class XamlConversions
 
    //string ParagraphTextDefault => "<Paragraph LineHeight=\"18.666666666666668\" FontFamily=\"Times New Roman, ‚l‚r –¾’©\" Margin=\"0,0,0,0\" Padding=\"0,0,0,0\">";
 
+   // Arty:
+   internal static string GetFullXaml(FlowDocument fdoc)
+   {
+      using var stream = new MemoryStream();
+      using var writer = new StreamWriter(stream, Encoding.UTF8, leaveOpen: true);
+
+      string xaml = GetDocXaml(true, fdoc);
+      writer.Write(xaml);
+      writer.Flush();
+
+      stream.Position = 0;
+      using var reader = new StreamReader(stream, Encoding.UTF8);
+      return reader.ReadToEnd();
+   }
    internal static void SaveXamlPackage(string fileName, FlowDocument fdoc)
    {
 

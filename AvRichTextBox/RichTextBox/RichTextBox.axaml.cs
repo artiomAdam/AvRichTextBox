@@ -245,6 +245,9 @@ public partial class RichTextBox : UserControl
 	
    public void LoadXaml (string fileName) { FlowDoc.LoadXamlFromFile(fileName); }
    public void SaveXamlPackage (string fileName) { FlowDoc.SaveXamlPackage(fileName); }
+   
+   // Arty:
+   public string GetFullXamlString () { return FlowDoc.GetFullXamlString(); }
 	public void LoadXamlString(string xaml) { FlowDoc.LoadXaml(xaml); }
 	public string SaveXamlString() { return FlowDoc.SaveXaml(); }
    public void SaveXaml (string fileName) { FlowDoc.SaveXamlToFile(fileName); }

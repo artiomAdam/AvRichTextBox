@@ -178,6 +178,12 @@ public partial class FlowDocument
 		XamlConversions.SaveXamlPackage(fileName, this);
 	}
 
+	// Arty:
+	public string GetFullXamlString()
+	{
+		return XamlConversions.GetFullXaml(this);
+	}
+
 }
 
 

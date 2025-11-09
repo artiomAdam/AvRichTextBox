@@ -1,10 +1,11 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using DocumentFormat.OpenXml.VariantTypes;
+using RtfDomParserAv;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using RtfDomParserAv;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static AvRichTextBox.FlowDocument;
@@ -95,12 +96,37 @@ public partial class RichTextBox
             TextPasted = true;
          }
       }
-      
+
+      /*//Change by: Arty Adam
+      else if(formats.Contains("PNG"))
+      {
+         object? pngObj = await TopLevel.GetTopLevel(this)!.Clipboard!.GetDataAsync("PNG");
+
+         if (pngObj is byte[] pngBytes && pngBytes.Length > 0)
+         {
+            // Convert PNG bytes to Avalonia Bitmap
+            using var ms = new MemoryStream(pngBytes);
+            var bitmap = new Avalonia.Media.Imaging.Bitmap(ms);
+
+            // Create an inline image element (depends on your FlowDoc model)
+            var imageInline = new InlineImage(bitmap)
+            {
+               Width = bitmap.PixelSize.Width,
+               Height = bitmap.PixelSize.Height
+            };
+
+            // Insert the image into the flow document
+            FlowDoc.SetRangeToInlines(FlowDoc.Selection, new List<IEditable> { imageInline });
+
+            newSelPoint = Math.Min(newSelPoint + 1, FlowDoc.DocEndPoint - 1);
+            TextPasted = true;
+         }*/
+
       if (TextPasted)
       {
          this.DocIC.UpdateLayout();
          await Task.Delay(100); //necessary for following operations
-         
+
          FlowDoc.Selection.EndParagraph.CallRequestInlinesUpdate();  // important
          FlowDoc.Selection.EndParagraph.UpdateEditableRunPositions();
 
@@ -113,7 +139,7 @@ public partial class RichTextBox
 
          CreateClient();
 
-        
+
       }
 
    }

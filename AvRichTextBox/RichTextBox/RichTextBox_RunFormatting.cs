@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media.Imaging;
 using DocumentFormat.OpenXml.VariantTypes;
 using RtfDomParserAv;
 using System;
@@ -14,7 +15,9 @@ namespace AvRichTextBox;
 
 public partial class RichTextBox
 {
-    
+   // Arty:
+   public event EventHandler<Bitmap>? ImagePasteRequested;
+
    private void ToggleItalics()
    {
       if (IsReadOnly) return;
@@ -96,31 +99,21 @@ public partial class RichTextBox
             TextPasted = true;
          }
       }
-
-      /*//Change by: Arty Adam
-      else if(formats.Contains("PNG"))
+      // Arty:
+      else if(formats.Contains("Image") || formats.Contains("PNG"))
       {
-         object? pngObj = await TopLevel.GetTopLevel(this)!.Clipboard!.GetDataAsync("PNG");
-
-         if (pngObj is byte[] pngBytes && pngBytes.Length > 0)
+         object? data = await TopLevel.GetTopLevel(this)!.Clipboard!.GetDataAsync("PNG");
+         if (data is byte[] pngBytes && pngBytes.Length > 0)
          {
-            // Convert PNG bytes to Avalonia Bitmap
             using var ms = new MemoryStream(pngBytes);
             var bitmap = new Avalonia.Media.Imaging.Bitmap(ms);
 
-            // Create an inline image element (depends on your FlowDoc model)
-            var imageInline = new InlineImage(bitmap)
-            {
-               Width = bitmap.PixelSize.Width,
-               Height = bitmap.PixelSize.Height
-            };
+            // instead of saving, raise event
+            ImagePasteRequested?.Invoke(this, bitmap);
+            return;
+         }
+      }
 
-            // Insert the image into the flow document
-            FlowDoc.SetRangeToInlines(FlowDoc.Selection, new List<IEditable> { imageInline });
-
-            newSelPoint = Math.Min(newSelPoint + 1, FlowDoc.DocEndPoint - 1);
-            TextPasted = true;
-         }*/
 
       if (TextPasted)
       {

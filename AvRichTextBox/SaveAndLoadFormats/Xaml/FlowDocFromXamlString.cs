@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using System;
@@ -21,6 +21,21 @@ public partial class XamlConversions
    [GeneratedRegex(@"Xaml/Image[0-9]{1,}\.png")]
    public static partial Regex FindXamlImageEntriesRegex();
 
+   // Arty:
+   internal static void LoadXamlString(string xamlString, FlowDocument fdoc)
+   {
+      try
+      {
+         if (string.IsNullOrWhiteSpace(xamlString))
+            throw new ArgumentException("Empty XAML string");
+
+         ProcessXamlString(xamlString, fdoc);
+      }
+      catch (Exception ex)
+      {
+         throw new InvalidOperationException("Could not load FlowDocument from XAML string", ex);
+      }
+   }
    internal static void LoadXamlPackage(string fileName, FlowDocument fdoc)
    {
       try

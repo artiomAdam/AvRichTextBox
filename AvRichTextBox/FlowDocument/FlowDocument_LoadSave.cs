@@ -172,6 +172,13 @@ public partial class FlowDocument
 
 	}
 
+	// Arty:
+	internal void LoadXamlString(string xamlString)
+	{
+		XamlConversions.LoadXamlString(xamlString, this);
+		InitializeDocument();
+	}
+
 
 	internal void SaveXamlPackage(string fileName)
 	{

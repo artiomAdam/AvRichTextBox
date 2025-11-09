@@ -220,9 +220,13 @@ public partial class XamlConversions
                      string ImageHeader = $"<Image Stretch=\"Fill\" Width=\"{childImage.Width}\" Height=\"{childImage.Height}\">";
                      runXamlBuilder.Append(ImageHeader);
 
+
+                     // Arty: image is named by the tag, which is the fullpath?
+                     string imgTag = (eIUC.ImagePath as string) ?? $"Image{eIUC.ImageNo}.png";
+
                      runXamlBuilder.Append(
                          "<Image.Source>" +
-                         $"<BitmapImage UriSource=\"./Image{eIUC.ImageNo}.png\" CacheOption=\"OnLoad\" />" +
+                         $"<BitmapImage UriSource=\"./{imgTag}\" CacheOption=\"OnLoad\" />" +
                          "</Image.Source>"
                      );
 

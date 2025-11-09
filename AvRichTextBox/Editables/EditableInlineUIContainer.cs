@@ -14,18 +14,37 @@ public class EditableInlineUIContainer : InlineUIContainer, IEditable, INotifyPr
 
    public EditableInlineUIContainer(Control c) { Child = c; }
 
+   // Arty: Added path argument for images
+   public EditableInlineUIContainer(Control c, string? path) { Child = c; ImagePath = path; }
+
    public Inline BaseInline => this;
    public Paragraph? myParagraph { get; set; }
    public int TextPositionOfInlineInParagraph { get; set; }
    public string InlineText { get; set; } = "@";
-   public string DisplayInlineText { get => "<UICONTAINER> => " + (this.Child != null && this.Child.GetType() == typeof(Image) ? "Image" : "NoChild"); }
+   public string DisplayInlineText { get => "<UICONTAINER> => " + (this.Child != null && this.Child.GetType() == typeof(Image) ? "Image" : "NoChild"); } 
    public string FontName => "---";
    public int InlineLength => 1;
    public bool IsEmpty => false;
    public bool IsLastInlineOfParagraph { get; set; }
    //public double InlineHeight => (this.Child != null && this.Child.GetType() == typeof(Image) ? : this.Child.Bounds.Height;
    public double InlineHeight => Child == null ? 0 : this.Child.Bounds.Height;
-   
+
+   // Arty:
+   public string? ImagePath
+   {
+      get
+      {
+         if (Child is Image img && img.Source is Avalonia.Media.Imaging.Bitmap)
+            return img.Tag as string ?? img.ToString();
+         return null;
+      }
+      set
+      {
+         if (Child is Image img)
+            img.Tag = value;
+      }
+   }
+
 
    public int ImageNo;
 

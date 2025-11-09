@@ -1,4 +1,7 @@
 DemoApp_AvRichtextBox/
+AvRichTextBox.sln
+.editorconfig
+Directory.Build.props
 
 
 ## Ignore Visual Studio temporary files, build results, and

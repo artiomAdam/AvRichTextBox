@@ -194,25 +194,39 @@ public partial class FlowDocument
 
    //}
 
+
+   // Arty: Added a guard for non-text elements so that when the caret is after a
+   // UI container (like an image), insert a new empty text run instead of trying to split the image
+   // and crashing
    internal List<IEditable> SplitRunAtPos(int charPos, IEditable inlineToSplit, int splitPos)
    {
-      //if (inlineToSplit.IsUIContainer)
-      //   return [new EditableRun(""), inlineToSplit];
+      if (inlineToSplit.IsUIContainer || string.IsNullOrEmpty(inlineToSplit.InlineText))
+      {
+         var paragraph = GetContainingParagraph(charPos);
+         var inlines = paragraph.Inlines;
+         int idx = inlines.IndexOf(inlineToSplit);
 
-      ObservableCollection<IEditable> inlines = GetContainingParagraph(charPos).Inlines;
-      int runIdx = inlines.IndexOf(inlineToSplit);
+         var newRun = new EditableRun("");
+         inlines.Insert(idx + 1, newRun);
 
-      //splitPos = Math.Min(splitPos, inlineToSplit.InlineLength);
+         UpdateBlockAndInlineStarts(Blocks.IndexOf(paragraph));
+
+         return new List<IEditable> { inlineToSplit, newRun };
+      }
+
+      ObservableCollection<IEditable> textInlines = GetContainingParagraph(charPos).Inlines;
+      int runIdx = textInlines.IndexOf(inlineToSplit);
+
+      splitPos = Math.Clamp(splitPos, 0, inlineToSplit.InlineText.Length);
 
       string part2Text = inlineToSplit.InlineText[splitPos..];
-
-
       inlineToSplit.InlineText = inlineToSplit.InlineText[..splitPos];
+
       IEditable insertInline = inlineToSplit.Clone();
       insertInline.InlineText = part2Text;
-      inlines.Insert(runIdx + 1, insertInline);
+      textInlines.Insert(runIdx + 1, insertInline);
 
-      return [inlineToSplit, insertInline];
+      return new List<IEditable> { inlineToSplit, insertInline };
    }
 
    internal Paragraph? GetNextParagraph(Paragraph par)

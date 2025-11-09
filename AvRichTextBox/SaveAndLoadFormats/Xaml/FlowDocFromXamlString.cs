@@ -340,12 +340,44 @@ public partial class XamlConversions
                                           XmlAttribute? uriSourceAtt = bitmapNode.Attributes?.OfType<XmlAttribute>().Where(batt => batt.Name == "UriSource").FirstOrDefault();
                                           if (uriSourceAtt != null)
                                           {
+                                             // Arty: Should load the source by the image path provided, else fallback to the old thing
+                                             string uri = uriSourceAtt.Value;
+                                             bool loadedFromFile = false;
+
+                                             try
+                                             {
+                                                string resolved = uri.TrimStart('.', '/');
+                                                string absolutePath = Path.GetFullPath(resolved);
+
+                                                if (File.Exists(absolutePath))
+                                                {
+                                                   img.Source = new Bitmap(absolutePath);
+                                                   img.Tag = Path.GetFileName(absolutePath);
+                                                   loadedFromFile = true;
+                                                }
+                                             }
+                                             catch (Exception ex)
+                                             {
+                                                Debug.WriteLine($"class FlowDocFromXamlString: Error loading image '{uri}': {ex.Message}");
+                                             }
+
+                                             if (!loadedFromFile)
+                                             {
+                                                Match imgNoMatch = Regex.Match(uri, "(?<=Image)[0-9]{1,}");
+                                                if (imgNoMatch.Success)
+                                                {
+                                                   int imageNo = int.Parse(imgNoMatch.Value);
+                                                   if (imageNo > 0 && imageNo <= consecutiveImageBitmaps.Count)
+                                                      img.Source = consecutiveImageBitmaps[imageNo - 1];
+                                                }
+                                             }
+                                             /*
                                              Match imgNoMatch = Regex.Match(uriSourceAtt.Value, "(?<=Image)[0-9]{1,}");
                                              if (imgNoMatch.Success)
                                              {
                                                 int ImageNo = int.Parse(imgNoMatch.Value);
                                                 img.Source = consecutiveImageBitmaps[ImageNo - 1];
-                                             }
+                                             }*/
                                           }
                                        }
                                     }

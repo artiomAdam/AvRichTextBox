@@ -226,7 +226,7 @@ public partial class XamlConversions
 
                      runXamlBuilder.Append(
                          "<Image.Source>" +
-                         $"<BitmapImage UriSource=\"./{imgTag}\" CacheOption=\"OnLoad\" />" +
+                         $"<BitmapImage UriSource=\"{imgTag}\" CacheOption=\"OnLoad\" />" +
                          "</Image.Source>"
                      );
 

@@ -15,7 +15,9 @@ public partial class FlowDocument
       if (Selection.Length > 0)
          ResetSelectionLengthZero(Selection.EndParagraph);
 
-      Selection!.BiasForwardStart = isTextInsertion ? false : true;
+      //Selection!.BiasForwardStart = isTextInsertion ? false : true;
+      // Arty:
+      Selection!.BiasForwardStart = false;
 
       switch (SelectionExtendMode)
       {
@@ -48,8 +50,10 @@ public partial class FlowDocument
       SelectionExtendMode = ExtendMode.ExtendModeNone;
       ScrollInDirection!(1);
 
-      Selection!.BiasForwardStart = isTextInsertion ? false : true;
-      Selection!.BiasForwardEnd = Selection.BiasForwardStart;
+      /*Selection!.BiasForwardStart = isTextInsertion ? false : true;
+      Selection!.BiasForwardEnd = Selection.BiasForwardStart;*/
+      Selection!.BiasForwardStart = false;
+      Selection!.BiasForwardEnd = false;
 
 
    }

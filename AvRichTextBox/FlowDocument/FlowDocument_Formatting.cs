@@ -162,7 +162,6 @@ public partial class FlowDocument
       Selection.StartParagraph.SelectionStartInBlock = Selection.Start - Selection.StartParagraph.StartInDoc;
       Selection.EndParagraph.SelectionEndInBlock = Selection.End - Selection.EndParagraph.StartInDoc;
       Selection.GetEndInline();
-      Selection.GetEndInline();
 
       UpdateSelectedParagraphs();
 

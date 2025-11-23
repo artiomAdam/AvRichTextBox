@@ -41,7 +41,7 @@ public partial class FlowDocument
          else
          {  //Debug.WriteLine("starinlinetext = " + startInline.InlineText);
             insertIdx = startInline.GetCharPosInInline(Selection.Start); 
-            startInline.InlineText = startInline.InlineText.Insert(insertIdx, insertText);
+             startInline.InlineText = startInline.InlineText.Insert(insertIdx, insertText);
          }
 
          Undos.Add(new InsertCharUndo(Blocks.IndexOf(Selection.StartParagraph), Selection.StartParagraph.Inlines.IndexOf(startInline!), insertIdx, this, Selection.Start));
@@ -50,6 +50,8 @@ public partial class FlowDocument
 
          Selection.StartParagraph.CallRequestInlinesUpdate();
          UpdateBlockAndInlineStarts(Selection.StartParagraph);
+
+         SelectionExtendMode = ExtendMode.ExtendModeNone;
 
          for (int i = 0; i < insertText.Length; i++) 
             MoveSelectionRight(true);

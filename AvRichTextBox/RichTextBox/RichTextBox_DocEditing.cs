@@ -12,8 +12,9 @@ public partial class RichTextBox
    private void RichTextBox_TextInput(object? sender, Avalonia.Input.TextInputEventArgs e)
    {
       if (IsReadOnly) return;
-
+      Debug.WriteLine($"Key '{e.Text}' BEFORE insert: Start={FlowDoc.Selection.Start}, End={FlowDoc.Selection.End}");
       FlowDoc.InsertText(e.Text);
+      Debug.WriteLine($"Key '{e.Text}' AFTER insert:  Start={FlowDoc.Selection.Start}, End={FlowDoc.Selection.End}");
       UpdateCurrentParagraphLayout();
       
       if (PreeditOverlay.IsVisible)
